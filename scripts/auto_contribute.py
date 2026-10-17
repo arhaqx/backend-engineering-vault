@@ -690,11 +690,6 @@ def main():
     state["day_count"] = state.get("day_count", 0) + 1
     save_state(state)
 
-    # Commit the state file as well or keep it clean
-    run_cmd("git add .contributions_state.json")
-    run_cmd('git commit --amend --no-edit')
-    run_cmd("git push --force-with-lease origin main")
-
     print(f"\nSuccessfully completed {len(pushed)} pushes today!")
 
 if __name__ == "__main__":
