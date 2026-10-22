@@ -664,14 +664,18 @@ def create_and_push(item):
 
 def main():
     import argparse
+    import time
     parser = argparse.ArgumentParser(description="Auto contribute to backend-engineering-vault")
-    parser.add_argument("--count", type=int, default=4, help="Number of commits/pushes to make")
+    parser.add_argument("--count", type=int, default=None, help="Number of commits/pushes to make (default: random 3-12)")
     args = parser.parse_args()
+
+    count = args.count if args.count is not None else random.randint(3, 12)
+    print(f"Targeting {count} pushes today (random range: 3-12)...")
 
     state = load_state()
     pushed = []
 
-    for _ in range(args.count):
+    for i in range(count):
         # Pick next unused curated catalog item
         unused = [i for i in range(len(CATALOG)) if i not in state["used_indices"]]
         if unused:
@@ -686,6 +690,8 @@ def main():
 
         msg = create_and_push(item)
         pushed.append(msg)
+        if i < count - 1:
+            time.sleep(random.uniform(1.5, 3.5))
 
     state["day_count"] = state.get("day_count", 0) + 1
     save_state(state)
